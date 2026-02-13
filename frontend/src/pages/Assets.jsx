@@ -109,14 +109,14 @@ const Assets = () => {
   if (loading) {
     return (
       <div>
-        <h1 className="text-3xl font-bold mb-6">Assets</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Assets</h1>
         <div className="bg-white rounded-lg shadow">
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="flex items-center gap-4 py-4 animate-pulse border-b border-gray-100">
+              <div key={i} className="flex items-center gap-4 py-3 sm:py-4 animate-pulse border-b border-gray-100">
                 <div className="h-4 bg-gray-200 rounded w-16"></div>
-                <div className="h-4 bg-gray-200 rounded w-32"></div>
-                <div className="h-4 bg-gray-200 rounded w-24 ml-auto"></div>
+                <div className="h-4 bg-gray-200 rounded w-24 sm:w-32"></div>
+                <div className="h-4 bg-gray-200 rounded w-20 sm:w-24 ml-auto"></div>
               </div>
             ))}
           </div>
@@ -128,13 +128,13 @@ const Assets = () => {
   if (error) {
     return (
       <div>
-        <h1 className="text-3xl font-bold mb-6">Assets</h1>
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-          <span className="text-4xl mb-4 block">⚠️</span>
-          <p className="text-red-700">{error}</p>
+        <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Assets</h1>
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 sm:p-6 text-center">
+          <span className="text-3xl sm:text-4xl mb-4 block">⚠️</span>
+          <p className="text-red-700 text-sm sm:text-base">{error}</p>
           <button
             onClick={() => window.location.reload()}
-            className="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+            className="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors text-sm sm:text-base"
           >
             Retry
           </button>
@@ -145,16 +145,16 @@ const Assets = () => {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-6">Assets</h1>
+      <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Assets</h1>
 
       {/* Filters and Search */}
-      <div className="bg-white p-4 rounded-lg shadow mb-6">
-        <div className="flex flex-col sm:flex-row gap-4">
+      <div className="bg-white p-3 sm:p-4 rounded-lg shadow mb-4 sm:mb-6">
+        <div className="flex flex-col gap-3 sm:gap-4">
           {/* Filter Buttons */}
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <button
               onClick={() => setFilter('all')}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-sm font-medium transition-colors ${
                 filter === 'all'
                   ? 'bg-pulse-primary text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -164,7 +164,7 @@ const Assets = () => {
             </button>
             <button
               onClick={() => setFilter('stocks')}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-sm font-medium transition-colors ${
                 filter === 'stocks'
                   ? 'bg-pulse-primary text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -174,7 +174,7 @@ const Assets = () => {
             </button>
             <button
               onClick={() => setFilter('crypto')}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-sm font-medium transition-colors ${
                 filter === 'crypto'
                   ? 'bg-pulse-primary text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -185,55 +185,104 @@ const Assets = () => {
           </div>
 
           {/* Search Input */}
-          <div className="flex-1">
+          <div className="w-full">
             <input
               type="text"
               placeholder="🔍 Search by name or symbol..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pulse-primary focus:border-transparent"
+              className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pulse-primary focus:border-transparent"
             />
           </div>
         </div>
       </div>
 
-      {/* Assets Table */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      {/* Assets - Mobile Cards */}
+      <div className="md:hidden space-y-3">
+        {filteredAssets.length === 0 ? (
+          <div className="bg-white rounded-lg shadow p-6 text-center text-gray-500">
+            No assets found matching your criteria
+          </div>
+        ) : (
+          filteredAssets.map((asset) => (
+            <div
+              key={asset.id}
+              onClick={() => setSelectedAsset(selectedAsset?.id === asset.id ? null : asset)}
+              className="bg-white rounded-lg shadow p-4 cursor-pointer hover:shadow-md transition-shadow"
+            >
+              <div className="flex items-start justify-between mb-2">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-gray-900">{asset.symbol}</span>
+                    <span
+                      className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                        asset.type === 'stock'
+                          ? 'bg-blue-100 text-blue-800'
+                          : 'bg-orange-100 text-orange-800'
+                      }`}
+                    >
+                      {asset.type === 'stock' ? '📈' : '🪙'}
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-500 truncate max-w-[200px]">{asset.name}</p>
+                </div>
+                <div className="text-right">
+                  <p className="font-semibold text-gray-900">{formatCurrency(asset.currentPrice)}</p>
+                  <p
+                    className={`text-sm font-medium ${
+                      asset.changePercent >= 0 ? 'text-green-600' : 'text-red-600'
+                    }`}
+                  >
+                    {formatPercentage(asset.changePercent)}
+                  </p>
+                </div>
+              </div>
+              <div className="flex justify-between text-xs text-gray-500 pt-2 border-t border-gray-100">
+                <span>Volume: {formatVolume(asset.volume)}</span>
+                <span>Tap for details →</span>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Assets Table - Desktop */}
+      <div className="hidden md:block bg-white rounded-lg shadow overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
                 <th
                   onClick={() => handleSort('symbol')}
-                  className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  className="px-4 lg:px-6 py-3 lg:py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
                 >
                   Symbol {getSortIcon('symbol')}
                 </th>
                 <th
                   onClick={() => handleSort('name')}
-                  className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  className="px-4 lg:px-6 py-3 lg:py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
                 >
                   Name {getSortIcon('name')}
                 </th>
                 <th
                   onClick={() => handleSort('currentPrice')}
-                  className="px-6 py-4 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  className="px-4 lg:px-6 py-3 lg:py-4 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
                 >
                   Price {getSortIcon('currentPrice')}
                 </th>
                 <th
                   onClick={() => handleSort('changePercent')}
-                  className="px-6 py-4 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  className="px-4 lg:px-6 py-3 lg:py-4 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
                 >
                   Change {getSortIcon('changePercent')}
                 </th>
                 <th
                   onClick={() => handleSort('volume')}
-                  className="px-6 py-4 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  className="hidden lg:table-cell px-4 lg:px-6 py-3 lg:py-4 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
                 >
                   Volume {getSortIcon('volume')}
                 </th>
-                <th className="px-6 py-4 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <th className="px-4 lg:px-6 py-3 lg:py-4 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">
                   Type
                 </th>
               </tr>
@@ -241,7 +290,7 @@ const Assets = () => {
             <tbody className="divide-y divide-gray-100">
               {filteredAssets.length === 0 ? (
                 <tr>
-                  <td colSpan="6" className="px-6 py-8 text-center text-gray-500">
+                  <td colSpan="6" className="px-4 lg:px-6 py-8 text-center text-gray-500">
                     No assets found matching your criteria
                   </td>
                 </tr>
@@ -252,30 +301,30 @@ const Assets = () => {
                     onClick={() => setSelectedAsset(selectedAsset?.id === asset.id ? null : asset)}
                     className="hover:bg-gray-50 cursor-pointer transition-colors"
                   >
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="font-semibold text-gray-900">{asset.symbol}</span>
+                    <td className="px-4 lg:px-6 py-3 lg:py-4 whitespace-nowrap">
+                      <span className="font-semibold text-gray-900 text-sm">{asset.symbol}</span>
                     </td>
-                    <td className="px-6 py-4">
-                      <span className="text-gray-700">{asset.name}</span>
+                    <td className="px-4 lg:px-6 py-3 lg:py-4">
+                      <span className="text-gray-700 text-sm truncate block max-w-[150px] lg:max-w-none">{asset.name}</span>
                     </td>
-                    <td className="px-6 py-4 text-right whitespace-nowrap">
-                      <span className="font-medium text-gray-900">
+                    <td className="px-4 lg:px-6 py-3 lg:py-4 text-right whitespace-nowrap">
+                      <span className="font-medium text-gray-900 text-sm">
                         {formatCurrency(asset.currentPrice)}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-right whitespace-nowrap">
+                    <td className="px-4 lg:px-6 py-3 lg:py-4 text-right whitespace-nowrap">
                       <span
-                        className={`font-medium ${
+                        className={`font-medium text-sm ${
                           asset.changePercent >= 0 ? 'text-green-600' : 'text-red-600'
                         }`}
                       >
                         {formatPercentage(asset.changePercent)}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-right whitespace-nowrap">
-                      <span className="text-gray-500">{formatVolume(asset.volume)}</span>
+                    <td className="hidden lg:table-cell px-4 lg:px-6 py-3 lg:py-4 text-right whitespace-nowrap">
+                      <span className="text-gray-500 text-sm">{formatVolume(asset.volume)}</span>
                     </td>
-                    <td className="px-6 py-4 text-center whitespace-nowrap">
+                    <td className="px-4 lg:px-6 py-3 lg:py-4 text-center whitespace-nowrap">
                       <span
                         className={`px-2 py-1 rounded-full text-xs font-medium ${
                           asset.type === 'stock'
@@ -296,34 +345,34 @@ const Assets = () => {
 
       {/* Asset Detail Modal */}
       {selectedAsset && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-lg w-full max-h-[80vh] overflow-y-auto">
-            <div className="p-6">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-end sm:items-center justify-center p-0 sm:p-4 z-50">
+          <div className="bg-white rounded-t-2xl sm:rounded-lg shadow-xl w-full sm:max-w-lg max-h-[85vh] sm:max-h-[80vh] overflow-y-auto">
+            <div className="p-4 sm:p-6">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">{selectedAsset.symbol}</h2>
-                  <p className="text-gray-500">{selectedAsset.name}</p>
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900">{selectedAsset.symbol}</h2>
+                  <p className="text-gray-500 text-sm sm:text-base">{selectedAsset.name}</p>
                 </div>
                 <button
                   onClick={() => setSelectedAsset(null)}
-                  className="text-gray-400 hover:text-gray-600 text-2xl"
+                  className="text-gray-400 hover:text-gray-600 text-xl sm:text-2xl p-2"
                 >
                   ✕
                 </button>
               </div>
 
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <p className="text-sm text-gray-500 mb-1">Current Price</p>
-                    <p className="text-xl font-bold text-gray-900">
+              <div className="space-y-3 sm:space-y-4">
+                <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                  <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
+                    <p className="text-xs sm:text-sm text-gray-500 mb-1">Current Price</p>
+                    <p className="text-lg sm:text-xl font-bold text-gray-900">
                       {formatCurrency(selectedAsset.currentPrice)}
                     </p>
                   </div>
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <p className="text-sm text-gray-500 mb-1">Change</p>
+                  <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
+                    <p className="text-xs sm:text-sm text-gray-500 mb-1">Change</p>
                     <p
-                      className={`text-xl font-bold ${
+                      className={`text-lg sm:text-xl font-bold ${
                         selectedAsset.changePercent >= 0 ? 'text-green-600' : 'text-red-600'
                       }`}
                     >
@@ -332,16 +381,16 @@ const Assets = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <p className="text-sm text-gray-500 mb-1">Volume</p>
-                    <p className="text-lg font-semibold text-gray-900">
+                <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                  <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
+                    <p className="text-xs sm:text-sm text-gray-500 mb-1">Volume</p>
+                    <p className="text-base sm:text-lg font-semibold text-gray-900">
                       {formatVolume(selectedAsset.volume)}
                     </p>
                   </div>
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <p className="text-sm text-gray-500 mb-1">Market Cap</p>
-                    <p className="text-lg font-semibold text-gray-900">
+                  <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
+                    <p className="text-xs sm:text-sm text-gray-500 mb-1">Market Cap</p>
+                    <p className="text-base sm:text-lg font-semibold text-gray-900">
                       {selectedAsset.marketCap
                         ? formatVolume(selectedAsset.marketCap)
                         : 'N/A'}
@@ -350,23 +399,23 @@ const Assets = () => {
                 </div>
 
                 {selectedAsset.sector && (
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <p className="text-sm text-gray-500 mb-1">Sector</p>
-                    <p className="text-lg font-semibold text-gray-900">{selectedAsset.sector}</p>
+                  <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
+                    <p className="text-xs sm:text-sm text-gray-500 mb-1">Sector</p>
+                    <p className="text-base sm:text-lg font-semibold text-gray-900">{selectedAsset.sector}</p>
                   </div>
                 )}
 
                 {selectedAsset.description && (
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <p className="text-sm text-gray-500 mb-2">Description</p>
-                    <p className="text-sm text-gray-700">{selectedAsset.description}</p>
+                  <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
+                    <p className="text-xs sm:text-sm text-gray-500 mb-2">Description</p>
+                    <p className="text-xs sm:text-sm text-gray-700 line-clamp-4 sm:line-clamp-none">{selectedAsset.description}</p>
                   </div>
                 )}
 
                 {selectedAsset.keyMetrics && (
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <p className="text-sm text-gray-500 mb-2">Key Metrics</p>
-                    <div className="grid grid-cols-2 gap-2 text-sm">
+                  <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
+                    <p className="text-xs sm:text-sm text-gray-500 mb-2">Key Metrics</p>
+                    <div className="grid grid-cols-2 gap-2 text-xs sm:text-sm">
                       <div className="flex justify-between">
                         <span className="text-gray-500">P/E Ratio:</span>
                         <span className="font-medium">{selectedAsset.keyMetrics.peRatio}</span>
@@ -376,7 +425,7 @@ const Assets = () => {
                         <span className="font-medium">${selectedAsset.keyMetrics.eps}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-500">Dividend Yield:</span>
+                        <span className="text-gray-500">Div Yield:</span>
                         <span className="font-medium">{selectedAsset.keyMetrics.dividendYield}%</span>
                       </div>
                       <div className="flex justify-between">
@@ -390,7 +439,7 @@ const Assets = () => {
 
               <button
                 onClick={() => setSelectedAsset(null)}
-                className="mt-6 w-full py-3 bg-pulse-primary text-white rounded-lg font-medium hover:bg-pulse-secondary transition-colors"
+                className="mt-4 sm:mt-6 w-full py-2.5 sm:py-3 bg-pulse-primary text-white rounded-lg font-medium hover:bg-pulse-secondary transition-colors text-sm sm:text-base"
               >
                 Close
               </button>
